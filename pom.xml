@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>ru.tinkoff</groupId>
+    <artifactId>tinkoff-test</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <webdriver.driver>chrome</webdriver.driver>
+        <webdriver.base.url>https://www.tinkoff.ru</webdriver.base.url>
+        <webdriver.timeouts.implicitlywait>15</webdriver.timeouts.implicitlywait>
+
+        <aspectj.version>1.8.9</aspectj.version>
+
+        <!--run jUnit tests in parallel-->
+        <forkCount>1</forkCount>
+        <reuseForks>true</reuseForks>
+        <parallel>all</parallel>
+        <perCoreThreadCount>false</perCoreThreadCount>
+        <useUnlimitedThreads>true</useUnlimitedThreads>
+        <threadCount>1</threadCount>
+        <argLine>-Xms1024m -Xmx6144m -Dfile.encoding=UTF-8</argLine>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>3.6.0</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+        </dependency>
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>3.2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>ru.yandex.qatools.allure</groupId>
+            <artifactId>allure-junit-adaptor</artifactId>
+            <version>1.5.4</version>
+        </dependency>
+        <dependency>
+            <groupId>ru.yandex.qatools.ashot</groupId>
+            <artifactId>ashot</artifactId>
+            <version>1.5.4</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>selenium-remote-driver</artifactId>
+                    <groupId>org.seleniumhq.selenium</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.21</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.21</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.19.1</version>
+                <configuration>
+                    <forkCount>${forkCount}</forkCount>
+                    <reuseForks>${reuseForks}</reuseForks>
+                    <parallel>${parallel}</parallel>
+                    <perCoreThreadCount>${perCoreThreadCount}</perCoreThreadCount>
+                    <argLine>${argLine}</argLine>
+                    <useUnlimitedThreads>${useUnlimitedThreads}</useUnlimitedThreads>
+                    <threadCountMethods>${threadCount}</threadCountMethods>
+                    <trimStackTrace>false</trimStackTrace>
+                    <systemProperties>
+                        <result.directory>${project.build.directory}/results/</result.directory>
+                        <target.directory>${project.basedir}/target/</target.directory>
+                        <webdriver.driver>${webdriver.driver}</webdriver.driver>
+                        <webdriver.base.url>${webdriver.base.url}</webdriver.base.url>
+                        <webdriver.timeouts.implicitlywait>${webdriver.timeouts.implicitlywait}</webdriver.timeouts.implicitlywait>
+                    </systemProperties>
+                    <argLine>
+                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+                    </argLine>
+                    <properties>
+                        <property>
+                            <name>listener</name>
+                            <value>ru.yandex.qatools.allure.junit.AllureRunListener</value>
+                        </property>
+                    </properties>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjweaver</artifactId>
+                        <version>${aspectj.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-maven</artifactId>
+                <version>2.9</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <useIncrementalCompilation>false</useIncrementalCompilation>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <showDeprecation>false</showDeprecation>
+                    <debug>true</debug>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
